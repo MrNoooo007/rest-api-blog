@@ -3,13 +3,17 @@ package com.congdat.springbootrestapi.service.implement;
 import com.congdat.springbootrestapi.entity.Post;
 import com.congdat.springbootrestapi.exception.ResourceNotFoundException;
 import com.congdat.springbootrestapi.payload.PostDto;
+import com.congdat.springbootrestapi.payload.PostResponse;
 import com.congdat.springbootrestapi.repository.PostRepository;
 import com.congdat.springbootrestapi.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,9 +30,24 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostDto> getAllPosts() {
-        List<Post> posts = postRepository.findAll();
-        return posts.stream().map(this::mapToDTO).collect(Collectors.toList());
+    public PostResponse getAllPosts(int pageNo, int pageSize, String sortBy, String orderBy) {
+
+        Sort sort = orderBy.equals("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+
+        Page<Post> posts = postRepository.findAll(pageable);
+        List<PostDto> content = posts.stream().map(this::mapToDTO).toList();
+
+        PostResponse postResponse = new PostResponse();
+        postResponse.setContent(content);
+        postResponse.setPageNo(posts.getNumber());
+        postResponse.setPageSize(posts.getSize());
+        postResponse.setTotalElement(posts.getTotalElements());
+        postResponse.setTotalPage(posts.getTotalPages());
+        postResponse.setLast(posts.isLast());
+
+        return postResponse;
     }
 
     @Override
