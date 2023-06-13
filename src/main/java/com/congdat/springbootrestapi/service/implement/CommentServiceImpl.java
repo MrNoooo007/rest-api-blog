@@ -46,10 +46,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentDto getCommentById(Long postId, Long commentId) {
-        Post post = postRepository.findById(postId).orElseThrow(()
-                -> new ResourceNotFoundException("Post", "id", postId));
-        Comment comment = commentRepository.findById(commentId).orElseThrow(()
-                -> new ResourceNotFoundException("Comment", "id", commentId));
+        Post post = postExist(postId);
+        Comment comment = commentExist(commentId);
         if(!comment.getPost().getId().equals(post.getId())) {
             throw new BlogApiException(HttpStatus.BAD_REQUEST, "Comment does not belong to this post");
         }
@@ -58,10 +56,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentDto updateComment(Long postId, Long commentId, CommentDto commentDto) {
-        Post post = postRepository.findById(postId).orElseThrow(()
-                -> new ResourceNotFoundException("Post", "id", postId));
-        Comment comment = commentRepository.findById(commentId).orElseThrow(()
-                -> new ResourceNotFoundException("Comment", "id", commentId));
+        Post post = postExist(postId);
+        Comment comment = commentExist(commentId);
         if(!comment.getPost().getId().equals(post.getId())) {
             throw new BlogApiException(HttpStatus.BAD_REQUEST, "Comment does not belong to this post");
         }
@@ -72,6 +68,26 @@ public class CommentServiceImpl implements CommentService {
         Comment savedComment = commentRepository.save(comment);
 
         return mapToDto(savedComment);
+    }
+
+    @Override
+    public void deleteComment(Long postId, Long commentId) {
+        Post post = postExist(postId);
+        Comment comment = commentExist(commentId);
+        if(!comment.getPost().getId().equals(post.getId())) {
+            throw new BlogApiException(HttpStatus.BAD_REQUEST, "Comment does not belong to this post");
+        }
+        commentRepository.delete(comment);
+    }
+
+    private Post postExist(Long postId) {
+        return postRepository.findById(postId).orElseThrow(()
+                -> new ResourceNotFoundException("Post", "id", postId));
+    }
+
+    private Comment commentExist(long commentId) {
+        return commentRepository.findById(commentId).orElseThrow(()
+                -> new ResourceNotFoundException("Comment", "id", commentId));
     }
 
     private Comment mapToEntity(CommentDto commentDto) {
