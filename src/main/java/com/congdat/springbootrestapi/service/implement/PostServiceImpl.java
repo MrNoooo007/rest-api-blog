@@ -6,6 +6,7 @@ import com.congdat.springbootrestapi.payload.PostDto;
 import com.congdat.springbootrestapi.payload.PostResponse;
 import com.congdat.springbootrestapi.repository.PostRepository;
 import com.congdat.springbootrestapi.service.PostService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +22,8 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     private PostRepository postRepository;
+
+    private ModelMapper mapper;
 
     @Override
     public PostDto createPost(PostDto postDto) {
@@ -78,20 +81,10 @@ public class PostServiceImpl implements PostService {
     }
 
     private PostDto mapToDTO(Post post) {
-        PostDto postDto = new PostDto();
-        postDto.setId(post.getId());
-        postDto.setContent(post.getContent());
-        postDto.setTitle(post.getTitle());
-        postDto.setDescription(post.getDescription());
-        return postDto;
+        return mapper.map(post, PostDto.class);
     }
 
     private Post mapToEntity(PostDto postDto) {
-        Post post = new Post();
-        post.setId(postDto.getId());
-        post.setContent(postDto.getContent());
-        post.setDescription(postDto.getDescription());
-        post.setTitle(postDto.getTitle());
-        return post;
+        return mapper.map(postDto, Post.class);
     }
 }
