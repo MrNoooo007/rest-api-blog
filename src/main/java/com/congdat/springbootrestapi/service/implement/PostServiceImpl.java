@@ -23,7 +23,12 @@ public class PostServiceImpl implements PostService {
     @Autowired
     private PostRepository postRepository;
 
-    private ModelMapper mapper;
+    private final ModelMapper mapper;
+
+    public PostServiceImpl(PostRepository postRepository, ModelMapper mapper) {
+        this.postRepository = postRepository;
+        this.mapper = mapper;
+    }
 
     @Override
     public PostDto createPost(PostDto postDto) {
@@ -57,7 +62,7 @@ public class PostServiceImpl implements PostService {
     public PostDto getPostById(long id) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Post", "ID", id));
-        return mapToDTO(post);
+        return mapper.map(post, PostDto.class);
     }
 
     @Override

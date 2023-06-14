@@ -1,5 +1,6 @@
 package com.congdat.springbootrestapi.service;
 
+import com.congdat.springbootrestapi.entity.Post;
 import com.congdat.springbootrestapi.payload.PostDto;
 import com.congdat.springbootrestapi.payload.PostResponse;
 

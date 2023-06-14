@@ -27,6 +27,11 @@ public class CommentServiceImpl implements CommentService {
 
     private ModelMapper mapper;
 
+    public CommentServiceImpl(CommentRepository commentRepository, PostRepository postRepository, ModelMapper mapper) {
+        this.commentRepository = commentRepository;
+        this.postRepository = postRepository;
+        this.mapper = mapper;
+    }
 
     @Override
     public CommentDto createComment(long postId, CommentDto commentDto) {
