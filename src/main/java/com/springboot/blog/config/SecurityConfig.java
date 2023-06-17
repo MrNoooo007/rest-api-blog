@@ -16,7 +16,7 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-@EnableMethodSecurity // PreAuthorize, PostAuthorize, PreFilter, PostFilterf
+@EnableMethodSecurity // PreAuthorize, PostAuthorize, PreFilter, PostFilter
 public class SecurityConfig {
 
     @Autowired
