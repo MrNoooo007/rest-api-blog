@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/posts")
 public class PostController {
@@ -29,7 +31,7 @@ public class PostController {
     }
 
     // get all posts rest api
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public PostResponse getAllPosts(
             @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
@@ -63,5 +65,11 @@ public class PostController {
         postService.deletePostById(id);
 
         return new ResponseEntity<>("Post entity deleted successfully.", HttpStatus.OK);
+    }
+
+    @GetMapping("/category/{id}")
+    public ResponseEntity<List<PostDto>> getPostsByCategory(@PathVariable Long id) {
+        List<PostDto> posts = postService.getPostsByCategory(id);
+        return ResponseEntity.ok(posts);
     }
 }
