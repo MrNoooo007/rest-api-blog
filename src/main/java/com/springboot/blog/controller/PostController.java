@@ -14,6 +14,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
+//@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RequestMapping("/api/posts")
 public class PostController {
 
