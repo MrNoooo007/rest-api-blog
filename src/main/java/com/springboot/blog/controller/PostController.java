@@ -4,6 +4,10 @@ import com.springboot.blog.payload.PostDto;
 import com.springboot.blog.payload.PostResponse;
 import com.springboot.blog.service.PostService;
 import com.springboot.blog.utils.AppConstants;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,6 +18,9 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
+@Tag(
+        name = "CURD REST API for POST Resource"
+)
 //@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RequestMapping("/api/posts")
 public class PostController {
@@ -25,6 +32,17 @@ public class PostController {
     }
 
     // create blog post rest api
+    @Operation(
+            summary = "Create post REST API",
+            description = "Create Post REST API is used to save a post into DB"
+    )
+    @ApiResponse(
+            responseCode = "201",
+            description = "Http status 201 CREATED"
+    )
+    @SecurityRequirement(
+            name = "Bear Authentication"
+    )
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<PostDto> createPost(@Valid @RequestBody PostDto postDto){
@@ -59,6 +77,9 @@ public class PostController {
     }
 
     // delete post rest api
+    @SecurityRequirement(
+            name = "Bear Authentication"
+    )
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletePost(@PathVariable(name = "id") long id){
